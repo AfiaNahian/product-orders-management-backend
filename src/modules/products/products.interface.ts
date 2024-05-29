@@ -2,10 +2,12 @@ export type TVariant = {
     type: string;
     value: string;
 }
+
 export type TInventory = {
     quantity: number;
     inStock: boolean;
 }
+
 export type TProduct = {
     _id?: string;
     name: string;
@@ -13,7 +15,6 @@ export type TProduct = {
     price: number;
     category: string;
     tags: string[];
-    //variants: [TVariant];
     variants: Array<TVariant>;
     inventory: TInventory
 }

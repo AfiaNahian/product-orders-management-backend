@@ -2,10 +2,12 @@ import { Request, Response } from "express";
 import { ProductServices } from "./products.service";
 import ProductValidationSchema from "./products.validation"
 
+// Creating a product after validation
 const createProduct = async (req: Request, res: Response) => {
-    try {
+    try 
+    {
         const productData = req.body;
-        // validation using zod
+        // product validation using zod
         const validatedProduct = ProductValidationSchema.parse(productData);
         const result = await ProductServices.createProduct(validatedProduct);
         res.status(200).json({
@@ -13,7 +15,9 @@ const createProduct = async (req: Request, res: Response) => {
             message: 'Product created successfully!',
             data: result
         });
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         res.status(400).json({
             success: false,
             message: error,
@@ -21,10 +25,11 @@ const createProduct = async (req: Request, res: Response) => {
     }
 }
 
-const fetchProduct = async (req: Request, res: Response) => {
-    try {
+// Finding a product with specified term
+const findProduct = async (req: Request, res: Response) => {
+    try 
+    {
         const { searchTerm } = req.query;
-        /*eslint no-prototype-builtins: "off"*/
         if (req.query.hasOwnProperty('searchTerm') && typeof searchTerm === "string" && searchTerm !== undefined) {
 
             const result = await ProductServices.findProductWithSearch(searchTerm);
@@ -37,7 +42,7 @@ const fetchProduct = async (req: Request, res: Response) => {
             } else {
                 res.status(200).json({
                     success: true,
-                    message: 'Products fetched successfully!',
+                    message: `Products matching search term '${searchTerm}' fetched successfully!`,
                     data: result
                 });
             }
@@ -46,12 +51,13 @@ const fetchProduct = async (req: Request, res: Response) => {
             const result = await ProductServices.findProduct();
             res.status(200).json({
                 success: true,
-                message: 'Products fetched successfully!',
+                message: `Products matching search term '${searchTerm}' fetched successfully!`,
                 data: result
             });
         }
 
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(400).json({
             success: false,
             message: error,
@@ -59,7 +65,8 @@ const fetchProduct = async (req: Request, res: Response) => {
     }
 }
 
-const fetchSingleProduct = async (req: Request, res: Response) => {
+// finding a product with id
+const findSingleProduct = async (req: Request, res: Response) => {
     try {
         const productId = req.params.id;
         const result = await ProductServices.findSingleProduct(productId);
@@ -130,8 +137,8 @@ const deleteProduct = async (req: Request, res: Response) => {
 
 export const ProductController = {
     createProduct,
-    fetchProduct,
-    fetchSingleProduct,
+    findProduct,
+    findSingleProduct,
     updateSingleProduct,
     deleteProduct
 }

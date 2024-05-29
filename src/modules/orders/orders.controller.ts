@@ -13,11 +13,8 @@ const createOrder = async (req: Request, res: Response) => {
 
         const { productId, quantity: orderQuantity } = validatedOrderData;
 
-        // first we find the corresponding product using the id we get from order data
-
         const product = await OrdersServices.createAnOrderToDB(productId);
 
-        // if order quantity is bigger than product invenotry below code will run and handle the situation
         if (product?.inventory.quantity < orderQuantity) {
             res.status(400).json({
                 success: false,
@@ -25,10 +22,10 @@ const createOrder = async (req: Request, res: Response) => {
                 data: { product }
             })
         } else {
-            // if the quantity is not 0 then we will create the order and update the quantity of that product
+            // 
             if (product?.inventory.quantity !== 0) {
                 const order = await Orders.create(validatedOrderData);
-                // after we create the order, we will update the quantity of the product and stock status
+                //updateing the quantity of the product and stock status
                 const updateProductQuantity = await Products.findByIdAndUpdate(
                     { _id: product?._id },
                     { $inc: { "inventory.quantity": -orderQuantity } }, //this is the order quantity that is being deducted from the inventory
@@ -71,12 +68,10 @@ const createOrder = async (req: Request, res: Response) => {
 const fetchOrder = async (req: Request, res: Response) => {
     try {
         const { email } = req.query;
-        // checking if there's a query for single order based on email
-        /*eslint no-prototype-builtins: "off"*/
         if (req.query.hasOwnProperty("email") && typeof email === 'string' && email !== 'undefined') {
             // if the email is there we will fetch the order for that specific user
             const result = await OrdersServices.fetchOrdersByEmailFromDB(email);
-            // wrong email input will result in no data. Then we will show this error message
+          
             if (result.length === 0) {
                 res.status(404).json({
                     success: false,
